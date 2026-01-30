@@ -1,0 +1,8 @@
+chipwhisperer
+argparse
+numpy
+time
+tqdm
+copy
+pathlib
+pyyaml

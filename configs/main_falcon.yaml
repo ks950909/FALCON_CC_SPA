@@ -1,0 +1,68 @@
+make_input:
+  enabled: false
+  exe: "bin/make_input"
+  testN: 100
+  out_of: "outputs/falcon/inputdata_of.txt"
+  out_add: "outputs/falcon/inputdata_add.txt"
+
+post_capture:
+  enabled: false
+  input_dir: "trace/full"
+  trace_add: "trace_fpr_add.npy"
+  pt_add: "pt_fpr_add.npy"
+  ct_add: "ct_fpr_add.npy"
+  trace_of: "trace_fpr_of.npy"
+  pt_of: "pt_fpr_of.npy"
+  ct_of: "ct_fpr_of.npy"
+  output_dir: "outputs/falcon"
+  pt_add_txt: "pt_add.txt"
+  pt_of_txt: "pt_of.txt"
+  make_group_exe: "bin/make_group"
+  testN: 100
+  add_group_txt: "add_group.txt"
+  of_group_txt: "of_group.txt"
+  sidechannel_out: "outputs/falcon/sidechannel.txt"
+  sidechannel_pr_enabled: true
+  sidechannel_pr_out: "outputs/falcon/sidechannel_pr.txt"
+  sidechannel_pr_prior0: 0.5
+  sidechannel_pr_temperature: 1.0
+
+postproc_cpp:
+  enabled: true
+  exe: "bin/falcon_postproc"
+  output_dir: "outputs/falcon/postproc"
+  maxrank_layer:
+    enabled: false
+    exe: "bin/falcon_postproc_test"
+    testmaxnum: 20
+    wrongnum: 505
+    K: 10000
+    max_pairs: 1000000
+    eq_keep: 100
+    verbose: 1
+    log: "maxrank_layer_505.log"
+  postproc:
+    enabled: false
+    testmaxnum: 10
+    mode: 0
+    log: "postproc_0.log"
+  maxrank:
+    enabled: false
+    testmaxnum: 10
+    wrongnum: 100
+    log: "maxrank_100.log"
+  maxrank_pr:
+    enabled: false
+    testmaxnum: 10
+    sigma: 4.0
+    log: "maxrank_pr.log"
+  rank:
+    enabled: false
+    testmaxnum: 10
+    rank: 300
+    log: "rank.log"
+  pr_rank:
+    enabled: false
+    testmaxnum: 10
+    rank: 300
+    log: "pr_rank.log"

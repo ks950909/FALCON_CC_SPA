@@ -1,0 +1,24 @@
+data:
+  cc:
+    input_dir: "trace/full"
+    trace: "trace_CC_O0.npy"
+    pt: "pt_CC_O0.npy"
+    ct: "ct_CC_O0.npy"
+    trace_m1: "trace_CC_m1_O0.npy"
+    pt_m1: "pt_CC_m1_O0.npy"
+    ct_m1: "ct_CC_m1_O0.npy"
+    trace_m2: "trace_CC_m2_O0_rbc.npy"
+    pt_m2: "pt_CC_m2_O0_rbc.npy"
+    ct_m2: "ct_CC_m2_O0_rbc.npy"
+output_dir: "outputs/cc"
+plot:
+  xlims:
+    cc: [100, 150]
+    m1: [120, 180]
+    m2: [200, 250]
+  auto_xlim:
+    enabled: false
+    radius:
+      cc: 15
+      m1: 15
+      m2: 15

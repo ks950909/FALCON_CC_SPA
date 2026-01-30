@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG   CMakeFiles/make_group.dir/Inputdata/make_group.c.o  -o /mnt/d/github/FALCON_CC_SPA/bin/make_group 

@@ -1,0 +1,93 @@
+# configs/default.yaml
+
+project:
+  name: "falcon-cc-spa"
+  version: "0.1"
+  run_id: "auto"            
+  seed: 12345               
+
+paths:
+  bin_dir: "bin"
+  tool_name: "falcon_tool"  # C 실행파일 이름
+  data_root: "trace"        # demo/full 데이터 루트
+  output_root: "outputs"    
+tools:
+  attack: "falcon_pp"
+  trace_util: "trace_util"
+
+data:
+  dataset: "demo"           # demo | full | custom
+  traces_file: "trace/demo/traces.npz"     # 또는 hdf5/폴더
+  meta_file: "trace/demo/meta.json"        # 선택
+  format: "npz"             # npz | hdf5 | raw
+  # 트레이스 전처리(용량 줄이기/속도)
+  dtype: "float64"            # int16 | float32 ...
+  # 1000키 중 공개 subset만 쓰는 경우
+  subset:
+    enabled: false
+    n_keys: 100
+    selection_seed: 2026    # subset 고정용(논문/아티팩트 설명에 중요)
+
+capture:                     
+  enabled: false
+  # 장비/보드 정보는 hw/hardware.yaml로 분리해도 됨
+  n_traces: 100
+  repeats: 1
+  save_raw: true
+  firmware_cc:
+    hex: "fw/SPA_CC/"
+    elf: "fw/SPA_CC/"
+    build_cmd:
+  firmware_falcon:
+    hex: "fw/SPA_FALCON/"
+    elf: "fw/SPA_FALCON/"
+    build_cmd:
+
+attack:
+  mode: "recover"           # recover | profile | evaluate 등
+  scheme: "falcon-512"
+  impl: "pqclean-clean"
+  # 공격 파라미터(네 논문에서 실험을 재현하는 핵심 값들)
+  poi:
+    method: "manual"        # manual | snr | mi | model
+    indices: []             # manual일 때 POI index 리스트
+    # 자동 선택이면 예: top_k, threshold
+    top_k: 50
+    threshold: 0.0
+  leakage_model:
+    target: "control_bits"  # control_bits | sign | hw | ...
+    n_bits: 0               # 예: 복구할 비트 수
+  postprocess:
+    method: "advanced"      # basic | advanced
+    max_candidates: 100000  # pruning 전 후보 상한
+    pruning:
+      enabled: true
+      strategy: "rank"      # rank | consistency | ...
+      top_k: 2000
+    tolerance:
+      enabled: true
+      bit_error_rate: 0.0   # corrupted leakage 허용치(있으면)
+  timing:
+    timeout_sec: 600         # 키 1개당 제한
+    n_workers: 1             # 병렬 실행(파이썬에서 멀티프로세싱할지)
+
+evaluation:
+  # 결과(표/그림) 재현 관련
+  metrics:
+    - "success_rate"
+    - "avg_runtime_sec"
+    - "bit_recovery_rate"
+    - "candidate_size"
+  paper_targets:
+    tables: ["Table1", "Table2"]
+    figures: ["Fig5", "Fig6"]
+  tolerance:
+    # AE가 결과 비교할 때 허용 오차
+    success_rate_abs: 0.01
+    runtime_rel: 0.10
+
+logging:
+  level: "info"
+  save_meta: true           # meta.json에 버전/커밋/환경 기록
+  save_cmdline: true
+  save_git_info: true

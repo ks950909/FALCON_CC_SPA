@@ -1,0 +1,6 @@
+/mnt/d/github/FALCON_CC_SPA/csrc/build/CMakeFiles/rebuild_cache.dir
+/mnt/d/github/FALCON_CC_SPA/csrc/build/CMakeFiles/falcon_postproc_test.dir
+/mnt/d/github/FALCON_CC_SPA/csrc/build/CMakeFiles/edit_cache.dir
+/mnt/d/github/FALCON_CC_SPA/csrc/build/CMakeFiles/falcon_postproc.dir
+/mnt/d/github/FALCON_CC_SPA/csrc/build/CMakeFiles/make_group.dir
+/mnt/d/github/FALCON_CC_SPA/csrc/build/CMakeFiles/make_input.dir

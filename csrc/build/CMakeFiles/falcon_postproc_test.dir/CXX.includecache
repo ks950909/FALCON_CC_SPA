@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/d/github/FALCON_CC_SPA/csrc/PostProcessing/fft.hxx
+cstdint
+-
+vector
+-
+
+/mnt/d/github/FALCON_CC_SPA/csrc/PostProcessing/main_test.cxx
+iostream
+-
+vector
+-
+cstdio
+-
+map
+-
+cmath
+-
+cstdlib
+-
+ctime
+-
+utility
+-
+algorithm
+-
+queue
+-
+random
+-
+string
+-
+fft.hxx
+/mnt/d/github/FALCON_CC_SPA/csrc/PostProcessing/fft.hxx
+

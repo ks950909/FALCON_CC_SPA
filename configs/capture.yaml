@@ -1,0 +1,47 @@
+scope:
+  preset: "default_setup"
+  gain:
+    mode: "high"
+    gain: 22
+    db: 25.091743119266056
+  clock:
+    clkgen_freq: 7370129.87012987
+    adc_freq: 29480519.48051948
+    extclk_monitor_enabled: false
+    extclk_tolerance: 13096723.705530167
+  io:
+    tio1: "serial_rx"
+    tio2: "serial_tx"
+    hs2: "clkgen"
+  trigger:
+    source: "firmware trigger"
+
+target:
+  mcu: "STM32F405"
+  board: "CW308"
+  protocol: "serial"
+  baud: 38400
+
+firmware:
+  hex_cc: "fw/SPA_CC/FALCON_SPA_O0-CW308_STM32F4.hex"
+  hex_falcon: "fw/SPA_FALCON/firmware.hex"
+  elf_cc: "fw/SPA_CC/FALCON_SPA_O0-CW308_STM32F4.elf"
+  elf_falcon: "fw/SPA_FALCON/firmware.elf"
+  program: true
+
+capture:
+  n_traces: 1000
+  of_keys: 100
+  add_keys: 100
+  trig_edge: "rising"
+  trace_file: "trace/full/trace.npy"
+  pt_file: "trace/full/pt.npy"
+  ct_file: "trace/full/ct.npy"
+  output_dir: "trace/full"
+  tracelen_of: 4188
+  tracelen_add: 6460
+
+experiment:
+  inputs:
+    of_file: "outputs/falcon/inputdata_of.txt"
+    add_file: "outputs/falcon/inputdata_add.txt"
