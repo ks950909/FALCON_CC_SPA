@@ -21,6 +21,16 @@ python ./python/main_cc.py --config ./configs/main_cc.yaml
 python ./python/main_falcon.py --config ./configs/main_falcon.yaml
 ```
 
+Docker (CC pipeline):
+```bash
+docker build -f Dockerfile.cc -t falcon-cc .
+docker run --rm -it \
+  -v "$PWD/trace:/work/trace" \
+  -v "$PWD/outputs:/work/outputs" \
+  -v "$PWD/configs:/work/configs" \
+  falcon-cc
+```
+
 Docker (Falcon pipeline, using prebuilt C binaries on host):
 ```bash
 cmake -S csrc -B csrc/build -DCMAKE_BUILD_TYPE=Release
