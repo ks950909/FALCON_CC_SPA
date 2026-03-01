@@ -63,7 +63,7 @@ set(PQCLEAN_SOURCES
 # ------------------------
 add_executable(make_input
   Inputdata/make_input.c
-  leak.c
+  Inputdata/leak.c
   ${PQCLEAN_SOURCES}
 )
 target_include_directories(make_input PRIVATE

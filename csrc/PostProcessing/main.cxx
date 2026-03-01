@@ -1300,6 +1300,25 @@ void fft_attack_pr_ranktest(int testmaxnum, int rank, const char *sidechannel_pa
             }
             break;
         }
+        if (found_rank < 0) {
+            int best_idx = -1;
+            int best_mismatch = 1e9;
+            for (int i = 0; i < candsz; i++) {
+                int mismatch = 0;
+                for (int j = 0; j < 512; j++) {
+                    if (cand[i].v[j] != ans[j]) mismatch++;
+                }
+                if (mismatch < best_mismatch) {
+                    best_mismatch = mismatch;
+                    best_idx = i;
+                }
+            }
+            fprintf(stderr, "[pr_rank][debug] test %d: no exact match, best_idx=%d mismatch=%d\n",
+                    testnum + 1, best_idx, best_mismatch);
+        } else {
+            fprintf(stderr, "[pr_rank][debug] test %d: exact match at rank=%d\n",
+                    testnum + 1, found_rank);
+        }
         if (found_rank >= 0) anscnt++;
         fprintf(flog, "test %d: %s (rank=%d, cand=%d)\n",
                 testnum + 1,
