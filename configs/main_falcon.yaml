@@ -32,7 +32,7 @@ postproc_cpp:
   exe: "bin/falcon_postproc"
   output_dir: "outputs/falcon/postproc"
   maxrank_layer:
-    enabled: false
+    enabled: true
     exe: "bin/falcon_postproc_test"
     testmaxnum: 20
     wrongnum: 505
@@ -44,8 +44,8 @@ postproc_cpp:
   postproc:
     enabled: false
     testmaxnum: 10
-    mode: 0
-    log: "postproc_0.log"
+    mode: 1
+    log: "postproc_1.log"
   maxrank:
     enabled: false
     testmaxnum: 10

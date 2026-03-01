@@ -7,9 +7,9 @@ data:
     trace_m1: "trace_CC_m1_O0.npy"
     pt_m1: "pt_CC_m1_O0.npy"
     ct_m1: "ct_CC_m1_O0.npy"
-    trace_m2: "trace_CC_m2_O0_rbc.npy"
-    pt_m2: "pt_CC_m2_O0_rbc.npy"
-    ct_m2: "ct_CC_m2_O0_rbc.npy"
+    trace_m2: "trace_CC_m2_O0.npy"
+    pt_m2: "pt_CC_m2_O0.npy"
+    ct_m2: "ct_CC_m2_O0.npy"
 output_dir: "outputs/cc"
 plot:
   xlims:

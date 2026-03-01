@@ -1197,10 +1197,10 @@ void fft_attack_ranktest(int testmaxnum, int rank, const char *sidechannel_path,
                     best_idx = i;
                 }
             }
-            fprintf(stderr, "[pr_rank][debug] test %d: no exact match, best_idx=%d mismatch=%d\n",
+            fprintf(stderr, "[rank][debug] test %d: no exact match, best_idx=%d mismatch=%d\n",
                     testnum + 1, best_idx, best_mismatch);
         } else {
-            fprintf(stderr, "[pr_rank][debug] test %d: exact match at rank=%d\n",
+            fprintf(stderr, "[rank][debug] test %d: exact match at rank=%d\n",
                     testnum + 1, found_rank);
         }
         if (found_rank >= 0) anscnt++;

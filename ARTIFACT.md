@@ -8,8 +8,8 @@ This artifact supports functional evaluation of our FALCON key-recovery workflow
 
 ## System Requirements
 - OS: WSL2 Ubuntu kernel 5.15.167.4-microsoft-standard-WSL2 on x86_64
-- CPU/RAM: [FILL]
-- Python: [FILL]
+- CPU/RAM: 12th Gen Intel(R) Core(TM) i7-12700K (20 CPUs), 31 GiB RAM
+- Python: 3.11 (Docker image: `python:3.11-slim`)
 - Toolchain: gcc-arm-none-eabi [FILL version]
 - Hardware: ChipWhisperer Husky, target board CW308 (MCU: STM32F405)
 
@@ -27,11 +27,15 @@ python -m pip install -r python/requirements.txt
 sudo apt-get install gcc-arm-none-eabi
 ```
 
-## Build Target Firmware (Optional)
-If you wish to regenerate firmware rather than use provided hex:
-```bash
-./scripts/build_firmware.sh
-```
+## Firmware for Capture
+This artifact provides prebuilt firmware images; no firmware build step is required.
+
+- CC variants: `fw/SPA_CC/FALCON_SPA_O{0,1,2,3,s}-CW308_STM32F4.hex`
+- Falcon target: `fw/SPA_FALCON/FALCON_fpr_SPA-CW308_STM32F4.hex`
+
+Firmware source files are provided under:
+- `csrc/SPA/cc_spa.c`
+- `csrc/SPA/fpr_spa.c`
 
 ## Trace Capture (Hardware Required)
 1) Connect ChipWhisperer and target.
@@ -40,7 +44,8 @@ If you wish to regenerate firmware rather than use provided hex:
 
 Example:
 ```bash
-python ./python/capture/capture.py --out ./trace/new_capture
+python ./python/capture/cc_gettrace.py
+python ./python/capture/falcon_gettrace.py
 ```
 
 ## Run Analysis
@@ -77,7 +82,7 @@ docker run --rm -v "$PWD/outputs:/work/outputs" fpr-add-region
   - Falcon (postproc): `outputs/falcon/postproc/*.log`
   - Falcon (sidechannel): `outputs/falcon/sidechannel.txt`, `outputs/falcon/sidechannel_pr.txt`
 - Expected success criteria: [FILL metric or key recovery target]
-- Expected runtime: [FILL]
+- Expected runtime (Docker, on the above system): CC main run ~4m21s; Falcon optional postproc runs vary by mode: postproc(mode 0) ~2m29s, postproc(mode 1) ~3s, rank ~16m02s, pr_rank ~18m23s, maxrank ~9s, maxrank_pr ~9s, maxrank_layer ~19s.
 
 ## Data / Traces
 - Included: subset of traces sufficient to demonstrate the workflow.
@@ -124,7 +129,7 @@ docker run --rm -v "$PWD/outputs:/work/outputs" fpr-add-region
 
 ## Reusability
 - Scripts are modular and can be extended to new targets or trace sets.
-- Key parameters live in: [FILL file paths]
+- Key parameters live in: `configs/main_cc.yaml`, `configs/main_falcon.yaml`, `configs/capture.yaml`
 
 ## Troubleshooting
 - Toolchain not found: confirm `gcc-arm-none-eabi` is installed and on PATH.

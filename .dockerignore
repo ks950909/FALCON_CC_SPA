@@ -1,6 +1,9 @@
 .git
 outputs
+trace
 trace/full
+*.egg
+*.zip
 csrc/build
 bin
 __pycache__

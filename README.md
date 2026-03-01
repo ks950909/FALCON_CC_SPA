@@ -8,13 +8,14 @@ This repository contains code, scripts, and data needed to reproduce the main re
 
 ## Quickstart
 1) Install dependencies (toolchain + Python). See Requirements below.
-2) (Optional) Build target firmware for ChipWhisperer.
+2) (Optional) Select a prebuilt firmware image for ChipWhisperer capture.
 3) Run the analysis script on the provided trace subset.
 
 Example (adjust paths/commands for your environment):
 ```bash
-# build firmware (optional)
-./scripts/build_firmware.sh
+# prebuilt firmware paths (examples)
+# CC variants:   fw/SPA_CC/FALCON_SPA_O{0,1,2,3,s}-CW308_STM32F4.hex
+# Falcon target: fw/SPA_FALCON/FALCON_fpr_SPA-CW308_STM32F4.hex
 
 # run analysis on trace subset
 python ./python/main_cc.py --config ./configs/main_cc.yaml
@@ -59,11 +60,10 @@ docker run --rm -v "$PWD/outputs:/work/outputs" fpr-add-region
 
 ## Repository Layout
 - `python/` analysis and post-processing scripts (entrypoints under consolidation)
-- `scripts/` helper scripts for building/capturing/running
 - `trace/` trace data (Falcon subset + full CC experiment traces)
 - `outputs/` example outputs and result artifacts
-- `csrc/` C sources (target/crypto)
-- `fw/` firmware-related files
+- `csrc/` C sources (target/crypto), including firmware-related sources under `csrc/SPA/`
+- `fw/` prebuilt firmware images for capture
 
 ## Reproducibility Notes
 - Paper results were obtained with randomized seeds; the artifact uses a fixed seed for deterministic reproduction.
@@ -109,7 +109,7 @@ docker run --rm -v "$PWD/outputs:/work/outputs" fpr-add-region
 - Falcon (sidechannel): `outputs/falcon/sidechannel.txt`, `outputs/falcon/sidechannel_pr.txt`
 
 ## Troubleshooting
-- If firmware build fails, verify `gcc-arm-none-eabi` is on PATH and matches the required version.
+- Use the provided prebuilt firmware images under `fw/` for capture.
 - If traces are not detected, check ChipWhisperer connection and target configuration.
 - If results differ, ensure you are using the provided seed and trace subset.
 
