@@ -24,12 +24,34 @@ def u8arr2u32(x, size=4):
 def load_cc_triplets(cfg: dict):
     data_cfg = cfg.get("data", cfg).get("cc", cfg.get("data", cfg))
     input_dir = Path(data_cfg.get("input_dir", "."))
+    expected_names = [
+        "trace",
+        "pt",
+        "ct",
+        "trace_m1",
+        "pt_m1",
+        "ct_m1",
+        "trace_m2",
+        "pt_m2",
+        "ct_m2",
+    ]
 
     def load_arr(key: str):
         name = data_cfg.get(key)
         if not name:
             raise KeyError(f"missing config key: {key}")
-        return np.load(input_dir / name)
+        path = input_dir / name
+        if not path.exists():
+            expected_list = "\n  - ".join(str(data_cfg.get(k)) for k in expected_names if data_cfg.get(k))
+            raise FileNotFoundError(
+                f"Missing trace file: {path}\n"
+                f"Expected CC files under: {input_dir}\n"
+                f"  - {expected_list}\n"
+                "If this is a fresh Git clone, large trace .npy files may not be included.\n"
+                "Place the CC files under trace/full/ (see README Data/Traces; "
+                "full dataset DOI: 10.5281/zenodo.18430573)."
+            )
+        return np.load(path)
 
     trace = load_arr("trace")
     pt = load_arr("pt")

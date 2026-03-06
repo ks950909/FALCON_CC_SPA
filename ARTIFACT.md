@@ -49,6 +49,8 @@ python ./python/capture/falcon_gettrace.py
 ```
 
 ## Run Analysis
+Before running analysis, ensure required trace `.npy` files exist under `trace/full/` (fresh Git clones may not include large trace files).
+
 Run the analysis on the provided trace subset:
 ```bash
 python ./python/main_cc.py --config ./configs/main_cc.yaml
@@ -86,6 +88,7 @@ docker run --rm -v "$PWD/outputs:/work/outputs" fpr-add-region
 
 ## Data / Traces
 - Included: subset of traces sufficient to demonstrate the workflow.
+- Note: if `trace/full/` is missing after clone/transfer, place the required trace `.npy` files there before executing Docker runs.
 - Subset size:
   - `of`: 100 keys × 512 traces/key = 51,200 traces.
   - `add`: 100 keys × 6,144 traces/key = 614,400 traces.

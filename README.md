@@ -9,7 +9,8 @@ This repository contains code, scripts, and data needed to reproduce the main re
 ## Quickstart
 1) Install dependencies (toolchain + Python). See Requirements below.
 2) (Optional) Select a prebuilt firmware image for ChipWhisperer capture.
-3) Run the analysis script on the provided trace subset.
+3) Prepare trace files under `trace/full/` (fresh Git clones may not include large `.npy` files).
+4) Run the analysis script on the provided trace subset.
 
 Example (adjust paths/commands for your environment):
 ```bash
@@ -87,6 +88,7 @@ docker run --rm -v "$PWD/outputs:/work/outputs" fpr-add-region
 
 ## Data / Traces
 - Included: Falcon trace subset (artifact release) and full CC experiment traces.
+- Note: on a fresh clone, `trace/` may be empty depending on transfer/package settings; ensure the required `.npy` files are present under `trace/full/` before running Docker pipelines.
 - Not included: full Falcon trace set from the paper (too large for artifact package).
 - Full Falcon trace request: Zenodo record DOI: 10.5281/zenodo.18430573
 - Subset description:
