@@ -7,10 +7,20 @@ This repository contains code, scripts, and data needed to reproduce the main re
 - Artifact target: CHES 2026 Functional.
 
 ## Quickstart
-1) Install dependencies (toolchain + Python). See Requirements below.
-2) (Optional) Select a prebuilt firmware image for ChipWhisperer capture.
-3) Prepare trace files under `trace/full/` (fresh Git clones may not include large `.npy` files).
-4) Run the analysis script on the provided trace subset.
+1) Clone the repository with submodules:
+```bash
+git clone --recurse-submodules https://github.com/ks950909/FALCON_CC_SPA.git
+cd FALCON_CC_SPA
+```
+If you already cloned without submodules, run:
+```bash
+git submodule update --init --recursive
+```
+2) Install dependencies (toolchain + Python). See Requirements below.
+3) (Optional) Select a prebuilt firmware image for ChipWhisperer capture.
+4) Prepare the required CC trace files under `trace/full/`.
+These large `.npy` files are not included in a fresh Git clone and must be obtained separately from the dataset release / Zenodo before running the CC pipeline.
+5) Run the analysis script on the provided trace subset.
 
 Example (adjust paths/commands for your environment):
 ```bash
@@ -64,6 +74,7 @@ docker run --rm -v "$PWD/outputs:/work/outputs" fpr-add-region
 - `trace/` trace data (Falcon subset + full CC experiment traces)
 - `outputs/` example outputs and result artifacts
 - `csrc/` C sources (target/crypto), including firmware-related sources under `csrc/SPA/`
+- `csrc/pqclean/` PQClean source tree (git submodule; initialize with `git submodule update --init --recursive`)
 - `fw/` prebuilt firmware images for capture
 
 ## Reproducibility Notes
@@ -91,6 +102,11 @@ docker run --rm -v "$PWD/outputs:/work/outputs" fpr-add-region
 - Note: on a fresh clone, `trace/` may be empty depending on transfer/package settings; ensure the required `.npy` files are present under `trace/full/` before running Docker pipelines.
 - Not included: full Falcon trace set from the paper (too large for artifact package).
 - Full Falcon trace request: Zenodo record DOI: 10.5281/zenodo.18430573
+- The CC pipeline requires the following files under `trace/full/`:
+  - `trace_CC_O0.npy`, `pt_CC_O0.npy`, `ct_CC_O0.npy`
+  - `trace_CC_m1_O0.npy`, `pt_CC_m1_O0.npy`, `ct_CC_m1_O0.npy`
+  - `trace_CC_m2_O0.npy`, `pt_CC_m2_O0.npy`, `ct_CC_m2_O0.npy`
+- These large `.npy` files may not be present in a fresh Git clone and should be prepared separately before running the CC pipeline.
 - Subset description:
   - Paper dataset: N=1000 keys.
   - Artifact subset: first 100 keys only, due to trace size constraints.
@@ -112,6 +128,8 @@ docker run --rm -v "$PWD/outputs:/work/outputs" fpr-add-region
 
 ## Troubleshooting
 - Use the provided prebuilt firmware images under `fw/` for capture.
+- If `csrc/pqclean` appears empty, initialize submodules with `git submodule update --init --recursive`.
+- If `python/main_cc.py` or `falcon-cc` reports missing files under `trace/full/`, ensure the required CC trace `.npy` files have been placed there.
 - If traces are not detected, check ChipWhisperer connection and target configuration.
 - If results differ, ensure you are using the provided seed and trace subset.
 

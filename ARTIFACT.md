@@ -10,11 +10,19 @@ This artifact supports functional evaluation of our FALCON key-recovery workflow
 - OS: WSL2 Ubuntu kernel 5.15.167.4-microsoft-standard-WSL2 on x86_64
 - CPU/RAM: 12th Gen Intel(R) Core(TM) i7-12700K (20 CPUs), 31 GiB RAM
 - Python: 3.11 (Docker image: `python:3.11-slim`)
-- Toolchain: gcc-arm-none-eabi [FILL version]
+- Toolchain: gcc-arm-none-eabi 9.2.1 (15:9-2019-q4-0ubuntu1)
 - Hardware: ChipWhisperer Husky, target board CW308 (MCU: STM32F405)
 
 ## Installation
-1) Clone the repository and enter it.
+1) Clone the repository with submodules and enter it.
+```bash
+git clone --recurse-submodules https://github.com/ks950909/FALCON_CC_SPA.git
+cd FALCON_CC_SPA
+```
+If you already cloned without submodules, run:
+```bash
+git submodule update --init --recursive
+```
 2) Install Python dependencies (if applicable).
 3) Install toolchain and ChipWhisperer dependencies.
 
@@ -49,7 +57,8 @@ python ./python/capture/falcon_gettrace.py
 ```
 
 ## Run Analysis
-Before running analysis, ensure required trace `.npy` files exist under `trace/full/` (fresh Git clones may not include large trace files).
+Before running analysis, ensure required trace `.npy` files exist under `trace/full/`.
+These large trace files are not included in a fresh Git clone and must be prepared separately from the dataset release / Zenodo before running the CC pipeline.
 
 Run the analysis on the provided trace subset:
 ```bash
@@ -83,12 +92,17 @@ docker run --rm -v "$PWD/outputs:/work/outputs" fpr-add-region
   - Falcon: `outputs/falcon/fpr_snr.pdf`, `outputs/falcon/fpr_scatter.png`, `outputs/falcon/recovery_bit_fpr.txt`
   - Falcon (postproc): `outputs/falcon/postproc/*.log`
   - Falcon (sidechannel): `outputs/falcon/sidechannel.txt`, `outputs/falcon/sidechannel_pr.txt`
-- Expected success criteria: [FILL metric or key recovery target]
+- Expected success criteria: the default CC and Falcon analysis pipelines complete without error using the provided configuration files and produce their corresponding output files under `outputs/cc/` and `outputs/falcon/`. Optional post-processing outputs depend on which `postproc_cpp` modes are enabled in `configs/main_falcon.yaml`.
 - Expected runtime (Docker, on the above system): CC main run ~4m21s; Falcon optional postproc runs vary by mode: postproc(mode 0) ~2m29s, postproc(mode 1) ~3s, rank ~16m02s, pr_rank ~18m23s, maxrank ~9s, maxrank_pr ~9s, maxrank_layer ~19s.
 
 ## Data / Traces
 - Included: subset of traces sufficient to demonstrate the workflow.
 - Note: if `trace/full/` is missing after clone/transfer, place the required trace `.npy` files there before executing Docker runs.
+- The CC pipeline requires the following files under `trace/full/`:
+  - `trace_CC_O0.npy`, `pt_CC_O0.npy`, `ct_CC_O0.npy`
+  - `trace_CC_m1_O0.npy`, `pt_CC_m1_O0.npy`, `ct_CC_m1_O0.npy`
+  - `trace_CC_m2_O0.npy`, `pt_CC_m2_O0.npy`, `ct_CC_m2_O0.npy`
+- These large `.npy` files may not be present in a fresh Git clone and should be prepared separately before running the CC pipeline.
 - Subset size:
   - `of`: 100 keys × 512 traces/key = 51,200 traces.
   - `add`: 100 keys × 6,144 traces/key = 614,400 traces.
@@ -133,8 +147,11 @@ docker run --rm -v "$PWD/outputs:/work/outputs" fpr-add-region
 ## Reusability
 - Scripts are modular and can be extended to new targets or trace sets.
 - Key parameters live in: `configs/main_cc.yaml`, `configs/main_falcon.yaml`, `configs/capture.yaml`
+- `csrc/pqclean/` is provided as a git submodule; initialize it with `git submodule update --init --recursive` if it appears empty.
 
 ## Troubleshooting
 - Toolchain not found: confirm `gcc-arm-none-eabi` is installed and on PATH.
+- If `csrc/pqclean` appears empty, initialize submodules with `git submodule update --init --recursive`.
+- If `python/main_cc.py` or `falcon-cc` reports missing files under `trace/full/`, ensure the required CC trace `.npy` files have been placed there.
 - ChipWhisperer connection issues: verify firmware, USB permissions, and cable.
 - Unexpected results: ensure the provided trace subset is used.
