@@ -21,6 +21,7 @@ git submodule update --init --recursive
 4) Prepare the required CC trace files under `trace/full/`.
 These large `.npy` files are not included in a fresh Git clone and must be obtained separately from the dataset release / Zenodo before running the CC pipeline.
 5) Run the analysis script on the provided trace subset.
+Local execution requires Python 3.11. If your system `python3` is older, use the provided Docker workflow instead.
 
 Example (adjust paths/commands for your environment):
 ```bash

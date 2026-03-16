@@ -59,6 +59,7 @@ python ./python/capture/falcon_gettrace.py
 ## Run Analysis
 Before running analysis, ensure required trace `.npy` files exist under `trace/full/`.
 These large trace files are not included in a fresh Git clone and must be prepared separately from the dataset release / Zenodo before running the CC pipeline.
+Local execution requires Python 3.11. If your system `python3` is older, use the provided Docker workflow instead.
 
 Run the analysis on the provided trace subset:
 ```bash
