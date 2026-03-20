@@ -60,6 +60,12 @@ python ./python/capture/falcon_gettrace.py
 Before running analysis, ensure required trace `.npy` files exist under `trace/full/`.
 These large trace files are not included in a fresh Git clone and must be prepared separately from the dataset release / Zenodo before running the CC pipeline.
 Local execution requires Python 3.11. If your system `python3` is older, use the provided Docker workflow instead.
+Before running the Falcon pipeline that uses host-side executables, build the required binaries from source:
+```bash
+cmake -S csrc -B csrc/build -DCMAKE_BUILD_TYPE=Release
+cmake --build csrc/build -j
+```
+This produces the required executables in `bin/`.
 
 Run the analysis on the provided trace subset:
 ```bash
@@ -96,6 +102,13 @@ docker run --rm -v "$PWD/outputs:/work/outputs" fpr-add-region
 - Expected success criteria: the default CC and Falcon analysis pipelines complete without error using the provided configuration files and produce their corresponding output files under `outputs/cc/` and `outputs/falcon/`. Optional post-processing outputs depend on which `postproc_cpp` modes are enabled in `configs/main_falcon.yaml`.
 - Expected runtime (Docker, on the above system): CC main run ~4m21s; Falcon optional postproc runs vary by mode: postproc(mode 0) ~2m29s, postproc(mode 1) ~3s, rank ~16m02s, pr_rank ~18m23s, maxrank ~9s, maxrank_pr ~9s, maxrank_layer ~19s.
 
+Interpretation of outputs:
+- `outputs/cc/cc_snr.pdf`, `outputs/cc/cc_trace.pdf`, and `outputs/cc/cc_scatter.png` are SPA analysis figures for the conditional calculator experiment.
+- `outputs/cc/recovery_bit_CC.txt` reports the SPA key-recovery result for the conditional calculator experiment.
+- `outputs/falcon/fpr_snr.pdf` and `outputs/falcon/fpr_scatter.png` are SPA analysis figures for the Falcon FPR experiment.
+- `outputs/falcon/recovery_bit_fpr.txt` reports the SPA key-recovery result for the Falcon experiment.
+- Files under `outputs/falcon/postproc/` are optional post-processing logs and depend on which `postproc_cpp` tests are enabled.
+
 ## Data / Traces
 - Included: subset of traces sufficient to demonstrate the workflow.
 - Note: if `trace/full/` is missing after clone/transfer, place the required trace `.npy` files there before executing Docker runs.
@@ -111,6 +124,10 @@ docker run --rm -v "$PWD/outputs:/work/outputs" fpr-add-region
   - Paper dataset uses N=1000 keys.
   - Artifact subset uses the first 100 keys only (prefix slice 0..99) due to size constraints.
 - Full dataset: Zenodo record DOI: 10.5281/zenodo.18430573
+- Some large files may be uploaded to Zenodo in split parts. In that case, reconstruct them before use, for example:
+```bash
+cat trace_fpr_add.npy.part_* > trace_fpr_add.npy
+```
 
 ## Reproducibility Notes
 - Fixed seed is used in artifact runs for determinism.
@@ -144,6 +161,28 @@ docker run --rm -v "$PWD/outputs:/work/outputs" fpr-add-region
 - Provided: prebuilt hex files compiled with -O0/-O1/-O2/-O3/-Os.
 - Location: `fw/SPA_CC/`
 - Notes: each hex contains CC/CM1/CM2. To reproduce traces, swap the hex file used by `python/capture/cc_gettrace.py`.
+
+## Optional Falcon Experiments
+Optional Falcon stages are controlled by `configs/main_falcon.yaml`.
+
+- `make_input.enabled`: generate Falcon input files used by later stages
+- `post_capture.enabled`: run the SPA stage that processes captured trace data into side-channel input files
+- `postproc_cpp.enabled`: run the post-processing stage
+
+Under `postproc_cpp`, the following optional post-processing tests are available:
+- `rank`
+- `pr_rank`
+- `maxrank`
+- `maxrank_pr`
+- `postproc`
+- `maxrank_layer`
+
+Recommended usage:
+- set `postproc_cpp.enabled: true`
+- set one or more of the post-processing tests above to `enabled: true`
+- leave unrelated tests disabled unless you explicitly want to run them
+
+For evaluation, enabling one test at a time is the easiest way to interpret the resulting logs, although one or more tests can be enabled.
 
 ## Reusability
 - Scripts are modular and can be extended to new targets or trace sets.

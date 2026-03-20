@@ -2,4 +2,5 @@ trace/**/*.npy
 *.zip
 *.egg
 *.tmp
-outputs/
+outputs/bin/*
+!bin/.gitkeep

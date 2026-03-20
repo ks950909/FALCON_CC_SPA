@@ -22,6 +22,12 @@ git submodule update --init --recursive
 These large `.npy` files are not included in a fresh Git clone and must be obtained separately from the dataset release / Zenodo before running the CC pipeline.
 5) Run the analysis script on the provided trace subset.
 Local execution requires Python 3.11. If your system `python3` is older, use the provided Docker workflow instead.
+Before running the Falcon pipeline that uses host-side executables, build the required binaries from source:
+```bash
+cmake -S csrc -B csrc/build -DCMAKE_BUILD_TYPE=Release
+cmake --build csrc/build -j
+```
+This produces the required executables in `bin/`.
 
 Example (adjust paths/commands for your environment):
 ```bash
@@ -120,12 +126,49 @@ docker run --rm -v "$PWD/outputs:/work/outputs" fpr-add-region
   - Location: `trace/full/`
   - Files: `trace_CC_O0.npy`, `pt_CC_O0.npy`, `ct_CC_O0.npy`, `trace_CC_m1_O0.npy`, `pt_CC_m1_O0.npy`, `ct_CC_m1_O0.npy`, `trace_CC_m2_O0.npy`, `pt_CC_m2_O0.npy`, `ct_CC_m2_O0.npy`
 
+## Dataset Preparation
+- The large trace dataset is distributed separately via Zenodo and may not be present in a fresh Git clone.
+- Before running the CC or Falcon pipelines, place the required `.npy` files under `trace/full/`.
+- Some large files may be uploaded to Zenodo in split parts. In that case, reconstruct them before use, for example:
+```bash
+cat trace_fpr_add.npy.part_* > trace_fpr_add.npy
+```
+
 ## Outputs
 - Analysis outputs are written under `outputs/` by default.
 - CC: `outputs/cc/cc_snr.pdf`, `outputs/cc/cc_trace.pdf`, `outputs/cc/cc_scatter.png`, `outputs/cc/recovery_bit_CC.txt`
 - Falcon: `outputs/falcon/fpr_snr.pdf`, `outputs/falcon/fpr_scatter.png`, `outputs/falcon/recovery_bit_fpr.txt`
 - Falcon (postproc): `outputs/falcon/postproc/*.log`
 - Falcon (sidechannel): `outputs/falcon/sidechannel.txt`, `outputs/falcon/sidechannel_pr.txt`
+
+## Mapping to Paper Results
+- `outputs/cc/cc_snr.pdf`, `outputs/cc/cc_trace.pdf`, and `outputs/cc/cc_scatter.png` are SPA analysis figures for the conditional calculator experiment.
+- `outputs/cc/recovery_bit_CC.txt` reports the SPA key-recovery result for the conditional calculator experiment.
+- `outputs/falcon/fpr_snr.pdf` and `outputs/falcon/fpr_scatter.png` are SPA analysis figures for the Falcon FPR experiment.
+- `outputs/falcon/recovery_bit_fpr.txt` reports the SPA key-recovery result for the Falcon experiment.
+- Files under `outputs/falcon/postproc/` are optional post-processing logs and depend on which `postproc_cpp` tests are enabled.
+
+## Optional Falcon Experiments
+Optional Falcon stages are controlled by `configs/main_falcon.yaml`.
+
+- `make_input.enabled`: generate Falcon input files used by later stages
+- `post_capture.enabled`: run the SPA stage that processes captured trace data into side-channel input files
+- `postproc_cpp.enabled`: run the post-processing stage
+
+Under `postproc_cpp`, the following optional post-processing tests are available:
+- `rank`
+- `pr_rank`
+- `maxrank`
+- `maxrank_pr`
+- `postproc`
+- `maxrank_layer`
+
+Recommended usage:
+- set `postproc_cpp.enabled: true`
+- set one or more of the post-processing tests above to `enabled: true`
+- leave unrelated tests disabled unless you explicitly want to run them
+
+For evaluation, enabling one test at a time is the easiest way to interpret the resulting logs, although one or more tests can be enabled.
 
 ## Troubleshooting
 - Use the provided prebuilt firmware images under `fw/` for capture.
