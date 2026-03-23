@@ -1,3 +1,4 @@
+#include <array>
 #include <iostream>
 #include <vector>
 #include <cstdio>
@@ -21,7 +22,7 @@ struct state_fft
     int th = 1e9;
     bool isans = false;
     uint16_t len = 0;
-    array<fpr,N> f;
+    std::array<fpr,N> f;
     bool operator<(const state_fft& s) const{
         return this->th < s.th;
     }
